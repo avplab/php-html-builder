@@ -1,5 +1,5 @@
 {
-    "name": "avp/php-html-builder",
+    "name": "avplab/php-html-builder",
     "keywords": [ "php", "html", "builder" ],
     "homepage": "http://github.com/avplab/php-html-builder",
     "type": "library",
