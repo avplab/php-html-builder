@@ -1,0 +1,22 @@
+{
+    "name": "avp/php-html-builder",
+    "keywords": [ "php", "html", "builder" ],
+    "homepage": "http://github.com/avplab/php-html-builder",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrew Polupanov",
+            "email": "andrewfortalking@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "AvpLab\\": "./src" }
+    },
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.2"
+    }
+}
