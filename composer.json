@@ -1,8 +1,9 @@
 {
     "name": "avplab/php-html-builder",
     "keywords": [ "php", "html", "builder" ],
+    "description": "PHP Html builder simplifies creation of an html code in php scripts",
     "homepage": "http://github.com/avplab/php-html-builder",
-    "type": "library",
+    "type": "package",
     "license": "MIT",
     "authors": [
         {
