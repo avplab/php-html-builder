@@ -1,6 +1,6 @@
 # Php Html Builder
 
-[![Build Status](https://travis-ci.org/avplab/php-html-builder.png?branch=master)](https://travis-ci.org/avplab/php-html-builder)
+[![Build Status](https://travis-ci.org/avplab/php-html-builder.svg?branch=master)](https://travis-ci.org/avplab/php-html-builder)
 
 
 Sometimes, we strongly need something simple for creating html code in php runtime. For example, 
