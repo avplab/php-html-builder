@@ -1,5 +1,0 @@
-<phpunit bootstrap="./vendor/autoload.php">
-    <testsuite name="Php Html Builder tests">
-        <directory>./tests/</directory>
-    </testsuite>
-</phpunit>

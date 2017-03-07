@@ -9,130 +9,128 @@ PhpHtmlBuilder was created to solve these issues quickly and without clogging th
 Install the component by using [Composer](https://getcomposer.org). Update your project's `composer.json` file to include dependency.
 
     "require": {
-        "avplab/php-html-builder": "~1.0"
+        "avplab/php-html-builder": "~2.0"
     }
 
 ## Usage
 
-You create an instance of `AvpLab\PhpHtmlBuilder` and use it similary as you write a html.
-
-    <?php
-    
-    use AvpLab\PhpHtmlBuilder;
-
-    $builder = new PhpHtmlBuilder();
-    $builder
-        ->tag('!DOCTYPE')->setHtml()->endOpened()
-        ->html()->setLang('en')
-            ->head()
-                ->meta()->setHttpEquiv('X-UA-Compatible')->setContent('IE=edge,chrome=1')->endOpened()
-                ->title('PhpHtmlBuilder: Example')->end()
-            ->end()
-            ->body()
-                ->div()->setClass('container')
-                    ->div()->setClass('row')
-                        ->div()->setClass('col-md-12')
-                            ->h1('PhpHtmlBuilder Demo')->end()
-                            ->p('Designed to make the code easier')->end()
-                        ->end()
-                    ->end()
-                ->end()
-            ->end()
-        ->end();
-    
-    echo $builder;
-    
-# API
-
-## Tag creation
-For creating tags, you need to call the method with the same name as html tag.
-When you need to close the tag and return to the parent, there are three methods to do it: `end`, `endShorted` and `endOpened`.
-
-* The `end` will close the tag as usual `<tag></tag>`. Usually such tags could be as container for inner tags, or tags like `a`, `p`, `span` etc.
-* The `endShorted` will close the tag as `<tag />`. In this case the tag doesn't have any content or child tags. This is useful for `br`, `img` tags or even `input` tag.
-* The `endOpened` will close the tag as `<tag>`. Other words, it keeps tag opened, but this tag doesn't have any content or child tags. This is useful for `meta` tags or similar.
-
+To start building an html code, create an instance of `AvpLab\PhpHtmlBuilder` and use it similary as writing html.
 ```php
-$builder
-    ->html()
-        ->body()
-            ...
-        ->end()
-    ->end();
-        
-//Result
-<html><body> ... </body></html>
-```
-    
-### Specific tags
-For creating a tag with specific name(e.g. `<!DOCTYPE html>`), you need to call the method `tag`.
 
-```php
-$builder
-    ->tag('!DOCTYPE')->endOpened()
-    
-//Result
-<!DOCTYPE>
-```
-    
-## Tag attributes
-For creating attributes, you need to call the method beginning from `set` and next with the same name as tag attribute in `CamelCase` format. 
-It will be converted to lower case and splitted by dash. When content of attribute does not presented, the only attribute will be passed to the tag.
-
-```php
+$builder = new \AvpLab\PhpHtmlBuilder();
 $builder
     ->tag('!DOCTYPE')->setHtml()->endOpened()
     ->html()->setLang('en')
+        ->head()
+            ->meta()->setHttpEquiv('X-UA-Compatible')->setContent('IE=edge,chrome=1')->endOpened()
+            ->title('PhpHtmlBuilder: Example')->end()
+        ->end()
         ->body()
             ->div()->setClass('container')
                 ->div()->setClass('row')
-                    ...
+                    ->div()->setClass('col-md-12')
+                        ->h1('PhpHtmlBuilder Demo')->end()
+                        ->p('Designed to make the code easier')->end()
+                    ->end()
                 ->end()
             ->end()
         ->end()
     ->end();
 
+echo $builder;
+```
+### Comments
+To add comment block use method `addComment()`.
+```
+$builder = new \AvpLab\PhpHtmlBuilder();
+echo $builder->addComment('foo')->end();
+
 //Result
-<!DOCTYPE html><html lang="en"><body><div class="container"><div class="row"></div></div></body></html>
+<!--foo-->
+```
+### Tags
+There are two ways to create HTML tags:
+The first one(this is also the most common way) is to call the method with the same name as HTML tag in `CamelCase` format.
+Tags are always be converted into lowercase with dashes.
+```php
+$builder = new \AvpLab\PhpHtmlBuilder();
+echo $builder->html()->customTag()->end()->end();
+
+//Result
+<html><custom-tag></custom-tag></html>
 ```
 
-## Tag content
-For adding a content to the tag, you need to call the `append` or `prepend` methods.
-
-* The `prepend` method will add the content before all of inner tags(right after the opened tag)
-* The `append` method will add the content after all of inner tags(right before the closed tag)
-
-There also possible to append the content when creating the tag.
+The second way is to call the method `tag()` with the name of the HTML tag. In this case no any conversion is applied.
+This is useful when you need to create very specific tags like `<!DOCTYPE>`.
 ```php
+$builder = new \AvpLab\PhpHtmlBuilder();
+echo $builder->tag('!DOCTYPE')->endOpened();
+
+//Result
+<!DOCTYPE>
+```
+To complete the tag need to call one of the following methods: `end()`, `endShorted()` and `endOpened()`.
+* Method `end()` will create tag `<tag></tag>` (i.e. `div`, `p`, `span`, etc.).
+* Method `endShorted()` will create short tag `<tag />`. In this case, tag can have only attributes (i.e. `script`, `link`, `img` or `input` and similar).
+* Method `endOpened()` will create opened tag `<tag>`. In this case, tag can have only attributes (i.e. `meta` or similar).
+
+There is also a possibility to add html and attributes during tag creation, using arguments of methods.
+Arguments will be recognized in the following way:
+- If only one argument is provided, and this is an array, it will be recognized as tag attributes, otherwise as tag html(see `addHtml()` below).
+- If two arguments are provided, the first is a tag html, and second is array of attributes.
+NOTE: in this case don't need to use camelCase for attributes names. It will keep the name as is. Also if attribute doesn't have a key, it will be recognized as attribute without value.
+```php
+$builder = new \AvpLab\PhpHtmlBuilder();
+echo $builder
+    ->div('<h1>title</h1>', ['class' => 'container', 'Foo' => 'Bar', 'baz'])
+        ->p(['class' => 'article'])->end()
+    ->end();
+
+//Result
+<div class="container" Foo="Bar" baz><h1>title</h1><p class="article"></p></div>
+```
+
+#### Attributes
+Creating attributes is very similar as creating tags. You need to call the method with an appropriate name in `CamelCase` format and beginning with `set`.
+If method called without arguments, only attribute name will be applied.
+```php
+$builder = new \AvpLab\PhpHtmlBuilder();
+$builder
+    ->tag('!DOCTYPE')->setHtml()->endOpened()
+    ->html()->setLang('en')->end();
+
+//Result
+<!DOCTYPE html><html lang="en"></html>
+```
+
+#### Content
+To add a plain text(escaped) into the tag, call the method `addText()`. For adding "raw" html string, use another method `addHtml()`.
+```php
+$builder = new \AvpLab\PhpHtmlBuilder();
 $builder
     ->div()
-        ->append('Appended text')
-        ->prepend('Prepended text')
-        ->h1('Demo')->end()
-        ->p('PhpHtmlBuilder makes code easier')->end()
+        ->addText('foo')
+        ->addHtml('<b>bar</b>')
     ->end();
-    
+
 //Result
-<div>Prepended text<h1>Demo</h1><p>PhpHtmlBuilder makes code easier</p>Appended text</div>
+<div>foo<b>bar</b></div>
 ```
 
 ## Render
 
-For rendering the html, you need to call the `build` method.
-
+To get an HTML string, you need to call the `build()` method or simply recognize it as string.
 ```php
-$builder = new PhpHtmlBuilder();
-// ...
-$html = $builder->build();
-echo $html;
-```    
-Or simply use the builder as string.
+$builder = new \AvpLab\PhpHtmlBuilder();
+// Do some html
 
-```php   
-$builder = new PhpHtmlBuilder();
-// ...
+$htmlString = $builder->build();
+echo $htmlString;
+
+// Supports string recognision
 echo $builder;
-```    
-#License
+```
+
+# License
 
 PhpHtmlBuilder is licensed under the MIT License - see the `LICENSE` file for details

@@ -16,64 +16,135 @@ class PhpHtmlBuilderTest extends \PHPUnit_Framework_TestCase
     public function testTagCreation()
     {
         $builder = new PhpHtmlBuilder();
-        $builder->foo()->end();
-        $this->assertEquals('<foo></foo>', $builder->build());
-    }
-
-    public function testSpecificTagCreation()
-    {
-        $builder = new PhpHtmlBuilder();
-        $builder->tag('foo')->end();
-        $this->assertEquals('<foo></foo>', $builder->build());
+        $builder->test()->end()->testTest()->end()->tag('!Test')->end();
+        $this->assertEquals('<test></test><test-test></test-test><!Test></!Test>', $builder->build());
     }
 
     public function testSetAttributes()
     {
         $builder = new PhpHtmlBuilder();
-        $builder
-            ->foo()
-                ->setClass('bar')
-                ->setNgDataModel('baz')
-                ->setChecked()
-            ->end();
-        $this->assertEquals('<foo class="bar" ng-data-model="baz" checked></foo>', $builder->build());
+        $builder->test()->setClass('Test')->setTestTest('test')->setTest()->end();
+        $this->assertEquals('<test class="Test" test-test="test" test></test>', $builder->build());
     }
 
-    public function testSetContent()
+    /**
+     * @expectedException \LogicException
+     */
+    public function testSetAttributesException()
     {
         $builder = new PhpHtmlBuilder();
-        $builder
-            ->foo()
-                ->prepend('bar')
-                ->append('baz')
-                ->bar()->end()
-            ->end();
-        $this->assertEquals('<foo>bar<bar></bar>baz</foo>', $builder->build());
+        $builder->setTest();
+    }
+
+    public function testAttributesAsArguments()
+    {
+        $builder = new PhpHtmlBuilder();
+        $builder->test(['test', 'Test' => 'Test'])->end();
+        $this->assertEquals('<test test Test="Test"></test>', $builder->build());
+
+        $builder = new PhpHtmlBuilder();
+        $builder->tag('test', ['test', 'Test' => 'Test'])->end();
+        $this->assertEquals('<test test Test="Test"></test>', $builder->build());
+    }
+
+    public function testContentWithAttributesAsArguments()
+    {
+        $builder = new PhpHtmlBuilder();
+        $builder->test('test', ['test', 'Test' => 'Test'])->end();
+        $this->assertEquals('<test test Test="Test">test</test>', $builder->build());
+
+        $builder = new PhpHtmlBuilder();
+        $builder->tag('test', 'test', ['test', 'Test' => 'Test'])->end();
+        $this->assertEquals('<test test Test="Test">test</test>', $builder->build());
+    }
+
+    public function testAddComment()
+    {
+        $builder = new PhpHtmlBuilder();
+        $builder->addComment('Test');
+        $this->assertEquals('<!--Test-->', $builder->build());
+    }
+
+    public function testAddText()
+    {
+        $builder = new PhpHtmlBuilder();
+        $builder->test()->addText('<b>test</b>')->end();
+        $this->assertEquals('<test>&lt;b&gt;test&lt;/b&gt;</test>', $builder->build());
+    }
+
+    public function testAddHtml()
+    {
+        $builder = new PhpHtmlBuilder();
+        $builder->test()->addHtml('<b>test</b>')->end();
+        $this->assertEquals('<test><b>test</b></test>', $builder->build());
     }
 
     public function testEnd()
     {
         $builder = new PhpHtmlBuilder();
-        $builder
-            ->foo()->end()
-            ->bar()->endShorted()
-            ->baz()->endOpened();
-        $this->assertEquals('<foo></foo><bar /><baz>', $builder->build());
+        $builder->test()->end();
+        $this->assertEquals('<test></test>', $builder->build());
     }
 
-    public function testFullHtml()
+    public function testEndOpened()
+    {
+        $builder = new PhpHtmlBuilder();
+        $builder->test()->endOpened();
+        $this->assertEquals('<test>', $builder->build());
+    }
+
+    public function testEndShorted()
+    {
+        $builder = new PhpHtmlBuilder();
+        $builder->test()->endShorted();
+        $this->assertEquals('<test />', $builder->build());
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testAbnormalEnd()
+    {
+        $builder = new PhpHtmlBuilder();
+        $builder->end();
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testAbnormalEndOpened()
+    {
+        $builder = new PhpHtmlBuilder();
+        $builder->endOpened();
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testAbnormalEndShorted()
+    {
+        $builder = new PhpHtmlBuilder();
+        $builder->endShorted();
+    }
+
+    public function testHierarchy()
     {
         $builder = new PhpHtmlBuilder();
         $builder
-            ->foo()->setChecked()->endOpened()
-            ->bar()
-                ->setClass('baz')
-                ->append('append')
-                ->baz()
-                    ->foo('test')->end()
+            ->test()->end()
+            ->test()
+                ->test()
+                    ->test()->end()
                 ->end()
-                ->br()->endShorted()
+                ->test()->end()
             ->end();
-        $this->assertEquals('<foo checked><bar class="baz"><baz><foo>test</foo></baz><br />append</bar>', $builder->build());
+        $this->assertEquals('<test></test><test><test><test></test></test><test></test></test>', $builder->build());
+    }
+
+    public function testBuilderAsString()
+    {
+        $builder = new PhpHtmlBuilder();
+        $builder->test()->end();
+        $this->assertEquals('<test></test>', (string)$builder);
     }
 }
