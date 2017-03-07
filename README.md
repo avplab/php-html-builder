@@ -47,7 +47,7 @@ echo $builder;
 To add comment block use method `addComment()`.
 ```
 $builder = new \AvpLab\PhpHtmlBuilder();
-echo $builder->addComment('foo')->end();
+echo $builder->addComment('foo');
 
 //Result
 <!--foo-->
