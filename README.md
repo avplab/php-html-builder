@@ -1,4 +1,8 @@
 # Php Html Builder
+
+[![Build Status](https://travis-ci.org/avplab/php-html-builder.png?branch=master)](https://travis-ci.org/avplab/php-html-builder)
+
+
 Sometimes, we strongly need something simple for creating html code in php runtime. For example, 
 we want to build a simple html report, or build a simple html for highlighting some profiling data, etc.
 Usually for such cases we don't want to use templates engines, or create separated html files. 
