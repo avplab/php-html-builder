@@ -39,22 +39,22 @@ class PhpHtmlBuilderTest extends \PHPUnit_Framework_TestCase
     public function testAttributesAsArguments()
     {
         $builder = new PhpHtmlBuilder();
-        $builder->test(['test', 'Test' => 'Test'])->end();
+        $builder->test(array('test', 'Test' => 'Test'))->end();
         $this->assertEquals('<test test Test="Test"></test>', $builder->build());
 
         $builder = new PhpHtmlBuilder();
-        $builder->tag('test', ['test', 'Test' => 'Test'])->end();
+        $builder->tag('test', array('test', 'Test' => 'Test'))->end();
         $this->assertEquals('<test test Test="Test"></test>', $builder->build());
     }
 
     public function testContentWithAttributesAsArguments()
     {
         $builder = new PhpHtmlBuilder();
-        $builder->test('test', ['test', 'Test' => 'Test'])->end();
+        $builder->test('test', array('test', 'Test' => 'Test'))->end();
         $this->assertEquals('<test test Test="Test">test</test>', $builder->build());
 
         $builder = new PhpHtmlBuilder();
-        $builder->tag('test', 'test', ['test', 'Test' => 'Test'])->end();
+        $builder->tag('test', 'test', array('test', 'Test' => 'Test'))->end();
         $this->assertEquals('<test test Test="Test">test</test>', $builder->build());
     }
 

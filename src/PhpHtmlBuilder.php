@@ -24,7 +24,7 @@ class PhpHtmlBuilder
     /**
      * @var Element[]
      */
-    private $elements = [];
+    private $elements = array();
 
     /**
      * @var \stdClass
@@ -61,8 +61,8 @@ class PhpHtmlBuilder
         // Create new scope
         $scope = new \stdClass();
         $scope->name = $name;
-        $scope->attributes = [];
-        $scope->elements = [];
+        $scope->attributes = array();
+        $scope->elements = array();
         $scope->parent = $this->scope;
 
         // resolve arguments

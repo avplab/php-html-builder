@@ -1,3 +1,7 @@
+### Version 2.0.1
+
+- Extended support for PHP5.3+
+
 ### Version 2.0.0
 
 - Added ability to set attributes via method arguments during tags creation.

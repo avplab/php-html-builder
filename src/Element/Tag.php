@@ -24,7 +24,7 @@ class Tag extends Element
     /**
      * @var string[]
      */
-    private $attributes = [];
+    private $attributes = array();
 
     /**
      * @var bool
@@ -39,14 +39,14 @@ class Tag extends Element
     /**
      * @var Element[]
      */
-    private $children = [];
+    private $children = array();
 
     /**
      * @param string $name
      * @param string[] $attributes
      * @param Element[] $children
      */
-    public function __construct($name, array $attributes = [], array $children = [])
+    public function __construct($name, array $attributes = array(), array $children = array())
     {
         $this->name = $name;
         $this->setAttributes($attributes);
@@ -112,7 +112,7 @@ class Tag extends Element
     {
         $result = '';
         if ($this->attributes) {
-            $attributes = [];
+            $attributes = array();
             foreach ($this->attributes as $name => $value) {
                 if ($value === null) {
                     $attributes[] = $this->escape($name);
