@@ -1,3 +1,7 @@
+### Version 2.0.2
+
+- Updated composer.json description
+
 ### Version 2.0.1
 
 - Extended support for PHP5.3+
