@@ -24,12 +24,12 @@ class PhpHtmlBuilder
     /**
      * @var Element[]
      */
-    private $elements = array();
+    protected $elements = array();
 
     /**
      * @var Scope
      */
-    private $scope;
+    protected $scope;
 
     /**
      * @param string $method
@@ -56,7 +56,7 @@ class PhpHtmlBuilder
      * @param array $arguments
      * @return $this
      */
-    private function createScope($name, $arguments)
+    protected function createScope($name, $arguments)
     {
         $this->scope = new Scope($name, $arguments, $this->scope);
         return $this;
@@ -66,7 +66,7 @@ class PhpHtmlBuilder
      * @param Element $element
      * @return void
      */
-    private function addElementToScope(Element $element)
+    protected function addElementToScope(Element $element)
     {
         if ($this->scope) {
             $this->scope->elements[] = $element;
