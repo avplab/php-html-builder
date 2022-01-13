@@ -27,7 +27,7 @@ class PhpHtmlBuilder
     private $elements = array();
 
     /**
-     * @var \stdClass
+     * @var Scope
      */
     private $scope;
 
@@ -58,28 +58,14 @@ class PhpHtmlBuilder
      */
     private function createScope($name, $arguments)
     {
-        // Create new scope
-        $scope = new \stdClass();
-        $scope->name = $name;
-        $scope->attributes = array();
-        $scope->elements = array();
-        $scope->parent = $this->scope;
-
-        // resolve arguments
-        if ($arguments) {
-            if (is_array($arguments[0])) {
-                $scope->attributes = $arguments[0];
-            } else {
-                $scope->elements[] = new Text($arguments[0], false);
-                if (isset($arguments[1]) && is_array($arguments[1])) {
-                    $scope->attributes = $arguments[1];
-                }
-            }
-        }
-
-        $this->scope = $scope;
+        $this->scope = new Scope($name, $arguments, $this->scope);
+        return $this;
     }
 
+    /**
+     * @param Element $element
+     * @return void
+     */
     private function addElementToScope(Element $element)
     {
         if ($this->scope) {
