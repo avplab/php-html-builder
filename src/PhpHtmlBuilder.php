@@ -61,6 +61,16 @@ class PhpHtmlBuilder
     }
 
     /**
+     * @return $this
+     */
+    public function clear()
+    {
+        $this->elements = [];
+        $this->scope = null;
+        return $this;
+    }
+
+    /**
      * @param string $name
      * @param array $arguments
      * @return $this
