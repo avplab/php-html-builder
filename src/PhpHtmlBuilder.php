@@ -15,6 +15,16 @@ use AvpLab\Element\Comment;
 use AvpLab\Element\Element;
 use AvpLab\Element\Text;
 use AvpLab\Element\Tag;
+use LogicException;
+use RuntimeException;
+
+use function strtolower;
+use function preg_replace;
+use function stripos;
+use function substr;
+use function func_get_args;
+use function array_shift;
+use function implode;
 
 /**
  * Provides API for easy building of HTML code in php
@@ -45,10 +55,9 @@ class PhpHtmlBuilder
                 throw new \LogicException('Attributes can be set for elements only');
             }
             $this->scope->attributes[substr($tagName, 4)] = isset($arguments[0]) ? $arguments[0] : null;
-        } else {
-            $this->createScope($tagName, $arguments);
+            return $this;
         }
-        return $this;
+        return $this->createScope($tagName, $arguments);
     }
 
     /**
@@ -68,11 +77,11 @@ class PhpHtmlBuilder
      */
     protected function addElementToScope(Element $element)
     {
-        if ($this->scope) {
-            $this->scope->elements[] = $element;
-        } else {
+        if ($this->scope === null) {
             $this->elements[] = $element;
+            return;
         }
+        $this->scope->elements[] = $element;
     }
 
     /**
@@ -122,12 +131,12 @@ class PhpHtmlBuilder
 
     /**
      * @return $this
-     * @throws \RuntimeException When element is not initialized yet.
+     * @throws RuntimeException When element is not initialized yet.
      */
     public function end()
     {
         if ($this->scope === null) {
-            throw new \RuntimeException('Abnormal element completion');
+            throw new RuntimeException('Abnormal element completion');
         }
         $element = new Tag($this->scope->name, $this->scope->attributes, $this->scope->elements);
         $this->scope = $this->scope->parent;
@@ -137,12 +146,12 @@ class PhpHtmlBuilder
 
     /**
      * @return $this
-     * @throws \RuntimeException When element is not initialized yet.
+     * @throws RuntimeException When element is not initialized yet.
      */
     public function endShorted()
     {
         if ($this->scope === null) {
-            throw new \RuntimeException('Abnormal element completion');
+            throw new RuntimeException('Abnormal element completion');
         }
         $element = new Tag($this->scope->name, $this->scope->attributes);
         $element->setShort(true);
@@ -153,12 +162,12 @@ class PhpHtmlBuilder
 
     /**
      * @return $this
-     * @throws \RuntimeException When element is not initialized yet.
+     * @throws RuntimeException When element is not initialized yet.
      */
     public function endOpened()
     {
         if ($this->scope === null) {
-            throw new \RuntimeException('Abnormal element completion');
+            throw new RuntimeException('Abnormal element completion');
         }
         $element = new Tag($this->scope->name, $this->scope->attributes);
         $element->setOpened(true);
@@ -172,11 +181,7 @@ class PhpHtmlBuilder
      */
     public function build()
     {
-        $result = '';
-        foreach ($this->elements as $element) {
-            $result .= $element;
-        }
-        return $result;
+        return implode('', $this->elements);
     }
 
     /**
