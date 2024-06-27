@@ -43,6 +43,26 @@ $builder
 
 echo $builder;
 ```
+The example above will build the following html:
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>PhpHtmlBuilder: Example</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1>PhpHtmlBuilder Demo</h1>
+          <p>Designed to make the code easier</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+```
 ### Comments
 To add comment block use method `addComment()`.
 ```
